@@ -53,7 +53,7 @@ export default class App extends Component {
 ```
 #### 二，安装antd
 ```
-npm i antd -D
+npm i antd -S
 
 ```
 #### 三，添加less
@@ -69,3 +69,48 @@ npm i antd -D
     }),
  );
 ```
+#### 四，配置antd
+安装
+```
+cnpm i babel-plugin-import -D
+```
+修改config-overrides.js文件，添加 fixBabelImports，如下。
+```
+ const { override,addLessLoader,fixBabelImports} = require('customize-cra');
+const modifyVars= require('./theme.js')
+ module.exports = override(
+    fixBabelImports('import', {
+        libraryName: 'antd',
+        libraryDirectory: 'es',
+        style: true, //加载原生less文件
+    }),
+    addLessLoader({
+        javascriptEnabled: true,
+        modifyVars
+    }),
+ );
+```
+新建theme.js文件存放自定义主题配置信息
+如：
+```
+module.exports={
+    '@primary-color':'pink',// 全局主色 （修改全局的颜色为粉色）
+    '@link-color':' #1890ff; ',// 链接色
+    '@success-color':' #52c41a; ',// 成功色
+    '@warning-color':' #faad14; ',// 警告色
+    '@error-color':' #f5222d; ',// 错误色
+    '@font-size-base':' 14px; ',// 主字号
+    '@heading-color':' rgba(0, 0, 0, 0.85); ',// 标题色
+    '@text-color':' rgba(0, 0, 0, 0.65); ',// 主文本色
+    '@text-color-secondary ':' rgba(0, 0, 0, .45); ',// 次文本色
+    '@disabled-color ':' rgba(0, 0, 0, .25); ',// 失效色
+    '@border-radius-base':' 4px; ',// 组件/浮层圆角
+    '@border-color-base':' #d9d9d9; ',// 边框色
+    '@box-shadow-base':' 0 2px 8px rgba(0, 0, 0, 0.15); ',// 浮层阴影
+}
+```
+定义const modifyVars= require('./theme.js')
+修改config-overrides.js里的addLessLoader，添加modifyVars。
+引入一个button组件，重启项目后可看到主题颜色。
+修改配置之后重新启动项目，npm run start。可看主题修改完成。
+
