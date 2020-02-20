@@ -69,7 +69,7 @@ npm i antd -S
     }),
  );
 ```
-#### 四，配置antd
+#### 四，配置antd，可以修改主题
 安装
 ```
 cnpm i babel-plugin-import -D
@@ -113,4 +113,103 @@ module.exports={
 修改config-overrides.js里的addLessLoader，添加modifyVars。
 引入一个button组件，重启项目后可看到主题颜色。
 修改配置之后重新启动项目，npm run start。可看主题修改完成。
+#### 五，添加装饰器写法的支持
+1，在app.js里添加高阶组件
+app.js如：
+```
+import React, { Component, createContext } from 'react'
+import './index.less'
+import { DatePicker } from 'antd';
+import { Button } from 'antd';
+import { render } from 'react-dom';
+
+// 添加高阶组件
+
+const testHOC = (WrappenComponent)=>{
+  return class HOCComponent extends Component{
+    render(){
+      return(
+        <>
+          <WrappenComponent/>
+          <div>这个是高阶组件里的信息</div>
+        </>
+      )
+    }
+  }
+}
+class App extends Component {
+  render() {
+    return (
+      <div>
+        APP
+        <DatePicker />
+        <Button type="primary">theme</Button>
+        <p>33</p>
+      </div>
+    )
+  }
+}
+export default testHOC(App)
+```
+2,添加装饰器写法
+2.1访问https://www.npmjs.com/package/customize-cra
+修改config-overrides.js。引入addDecoratorsLegacy，使用addDecoratorsLegacy。
+config-overrides.js如下：
+```
+ const { override,addLessLoader,fixBabelImports,addDecoratorsLegacy} = require('customize-cra');
+const modifyVars= require('./theme.js')
+ module.exports = override(
+    fixBabelImports('import', {
+        libraryName: 'antd',
+        libraryDirectory: 'es',
+        style: true, //加载原生less文件
+    }),
+    addLessLoader({
+        javascriptEnabled: true,
+        modifyVars
+    }),
+    addDecoratorsLegacy()
+ );
+```
+2.2使用@babel/plugin-proposal-decorators这个专门用于转换装饰器代码的插件
+安装npm i @babel/plugin-proposal-decorators -D
+2.3把index.js文件修改成装饰器写法
+如：
+```
+import React, { Component} from 'react'
+import './index.less'
+import { DatePicker } from 'antd';
+import { Button } from 'antd';
+import { render } from 'react-dom';
+
+// 添加高阶组件
+
+const testHOC = (WrappenComponent)=>{
+  return class HOCComponent extends Component{
+    render(){
+      return(
+        <>
+          <WrappenComponent/>
+          <div>这个是高阶组件里的信息</div>
+        </>
+      )
+    }
+  }
+}
+@testHOC
+class App extends Component {
+  render() {
+    return (
+      <div>
+        APP
+        <DatePicker />
+        <Button type="primary">theme</Button>
+      </div>
+    )
+  }
+}
+export default App
+// export default testHOC(App)
+```
+重启运行，即可。
 

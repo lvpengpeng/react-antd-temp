@@ -1,4 +1,4 @@
- const { override,addLessLoader,fixBabelImports} = require('customize-cra');
+ const { override,addLessLoader,fixBabelImports,addDecoratorsLegacy} = require('customize-cra');
 const modifyVars= require('./theme.js')
  module.exports = override(
     fixBabelImports('import', {
@@ -10,4 +10,5 @@ const modifyVars= require('./theme.js')
         javascriptEnabled: true,
         modifyVars
     }),
+    addDecoratorsLegacy()
  );
