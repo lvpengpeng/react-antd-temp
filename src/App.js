@@ -19,6 +19,7 @@ class App extends Component {
           })
         }
           <Redirect to={adminRoutes[0].pathname} from='/admin' exact />
+          {/* 当访问/admin的时候，直接重定向到 /admin/dashboard  */}
           <Redirect to="/404" />
         </Switch>
       </div>
