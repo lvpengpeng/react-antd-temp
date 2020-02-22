@@ -1,5 +1,5 @@
 import { adminRoutes } from '../../routes'
-
+import { withRouter } from 'react-router-dom'
 import React, { Component } from 'react'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 import './index.less'
@@ -9,10 +9,16 @@ const { Header, Content, Sider } = Layout;
 
 
 // 添加布局组件
-export default class Frame extends Component {
+@withRouter
+class Frame extends Component {
+    onMenuClick = ({key}) => {
+        console.log(this.props);
+        
+        this.props.history.push(key)
+      }
     render() {
         return (
-            <Layout>
+            <Layout style={{minHeight:'100%'}}>
             <Header className="header" style={{backgroundColor: "#ccc"}}>
               <div className="logo logo-img"/>
               {/* <Menu
@@ -30,9 +36,10 @@ export default class Frame extends Component {
               <Sider width={200} style={{ background: '#fff' }}>
                 <Menu
                   mode="inline"
-                //   defaultSelectedKeys={['1']}
-                //   defaultOpenKeys={['sub1']}
+                  onClick={this.onMenuClick}
                   style={{ height: '100%', borderRight: 0 }}
+                  selectedKeys={[this.props.location.pathname]}
+                  // this.props.location.pathname是当前页面的url地址
                 >
                     {
                         menus.map((item)=>{
@@ -68,7 +75,7 @@ export default class Frame extends Component {
                   </SubMenu> */}
                 </Menu>
               </Sider>
-              <Layout style={{ padding: '0 24px 24px' }}>
+              <Layout style={{ padding: '20px' }}>
                 <Breadcrumb style={{ margin: '16px 0' }}>
                   <Breadcrumb.Item>Home</Breadcrumb.Item>
                   <Breadcrumb.Item>List</Breadcrumb.Item>
@@ -90,3 +97,4 @@ export default class Frame extends Component {
         )
     }
 }
+export default Frame
