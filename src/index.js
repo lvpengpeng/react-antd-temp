@@ -4,8 +4,10 @@ import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import { mainRoutes } from './routes'
 import App from './App'
 import './index.less'
+import { Frame } from './components'
 render(
-    <Router>
+    <Frame>
+        <Router>
         <Switch>
             <Route path="/admin" render={(routerProps)=>{
                 {/* 需要登录才能访问admin ,所以用render*/}
@@ -20,6 +22,7 @@ render(
             <Redirect to="/admin" from="/" exact />
             <Redirect to="/404" />
         </Switch>
-    </Router>,
+    </Router>
+    </Frame>,
     document.querySelector('#root')
 )
