@@ -213,3 +213,7 @@ export default App
 ```
 重启运行，即可。
 
+#### 六. 添加时间处理函数库momentjs
+ 地址http://momentjs.cn/
+ 安装 npm i moment -S
+ 

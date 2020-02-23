@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Card ,Button,Table, Divider,Tooltip, Tag} from "antd"
+import moment from 'moment'
 import { getArticles } from '../../requests'
 const titleMap = {
     id:"id",
@@ -35,6 +36,16 @@ export default class Article extends Component {
                 <Tag color={amount > 230 ? 'red' : 'green'}>{record.amount}</Tag>
               </Tooltip>
             )
+          }
+        }
+      }
+      if(item === 'createAt') {
+        return {
+          title: titleMap[item],
+          key: item,
+          render: (text, record) => {
+            const { createAt } = record
+            return  moment(createAt).format('YYYY年MM月DD日 HH:mm:ss')
           }
         }
       }
