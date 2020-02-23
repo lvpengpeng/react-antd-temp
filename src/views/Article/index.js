@@ -73,6 +73,15 @@ export default class Article extends Component {
     })
     return columns
   }
+  onPageChange = (page, pageSize) =>{
+    console.log(page, pageSize,"page, pageSize");
+    this.setState({
+      offset: pageSize * (page - 1), 
+      limited: pageSize,
+    }, () => {
+      this.getData()
+    })
+  }
   getData(){
     getArticles(this.state.offset,this.state.limited).then((res)=>{
       console.log(res.list);
@@ -104,7 +113,16 @@ export default class Article extends Component {
         <Card title="文章列表" extra={<Button onClick={this.toExcel}>导出excel</Button>} style={{ height:'100%' }}>
             <Table loading={this.state.isLoading} rowKey={record => record.id} columns={this.state.columns} dataSource={this.state.dataSource}
             // 可在Table中使用pagination配置分页器
-            pagination={{pageSize:6,total:100}} />
+            pagination={{
+              current: this.state.offset / this.state.limited + 1,
+              total:this.state.total,
+              onChange:this.onPageChange ,
+              showQuickJumper: true, // showQuickJumper: true 显示跳至到多少页组件
+              showSizeChanger: true, //showSizeChanger: true显示一页显示几条组件
+              onShowSizeChange:this.onShowSizeChange, //pageSize 变化的回调
+              pageSizeOptions: ['10', '15', '20', '30'] , //手动修改默认值
+            }}
+           />
         </Card>
         )
     }
