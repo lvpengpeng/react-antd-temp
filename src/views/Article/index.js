@@ -15,8 +15,8 @@ export default class Article extends Component {
     super()
     this.state={
       isLoading:true,
-      offset: 0,
-      limited: 10,
+      offset: 0, //第几条开始
+      limited: 10, //一页多少条
       dataSource : [],
       columns :[]
     }
@@ -82,6 +82,16 @@ export default class Article extends Component {
       this.getData()
     })
   }
+  onShowSizeChange = (current, size)=>{
+    console.log(current, size,"current, size");
+    this.setState({
+      offset: 0,
+      // offset: pageSize * (page - 1), 
+     limited: size,
+    }, () => {
+      this.getData()
+    })
+  }
   getData(){
     getArticles(this.state.offset,this.state.limited).then((res)=>{
       console.log(res.list);
@@ -114,13 +124,13 @@ export default class Article extends Component {
             <Table loading={this.state.isLoading} rowKey={record => record.id} columns={this.state.columns} dataSource={this.state.dataSource}
             // 可在Table中使用pagination配置分页器
             pagination={{
-              current: this.state.offset / this.state.limited + 1,
+              current: this.state.offset / this.state.limited + 1, // 当前第几页
               total:this.state.total,
               onChange:this.onPageChange ,
               showQuickJumper: true, // showQuickJumper: true 显示跳至到多少页组件
               showSizeChanger: true, //showSizeChanger: true显示一页显示几条组件
               onShowSizeChange:this.onShowSizeChange, //pageSize 变化的回调
-              pageSizeOptions: ['10', '15', '20', '30'] , //手动修改默认值
+              pageSizeOptions: ['5','8','9','10', '15', '20', '30'] , //手动修改默认值
             }}
            />
         </Card>
