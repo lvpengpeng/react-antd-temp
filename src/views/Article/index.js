@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Card ,Button,Table, Divider,Tooltip, Tag} from "antd"
 import moment from 'moment'
 import { getArticles } from '../../requests'
+const ButtonGroup = Button.Group
 const titleMap = {
     id:"id",
     title:"标题",
@@ -13,6 +14,7 @@ export default class Article extends Component {
   constructor(){
     super()
     this.state={
+      isLoading:true,
       offset: 0,
       limited: 10,
       dataSource : [],
@@ -52,7 +54,21 @@ export default class Article extends Component {
      return {
         title: titleMap[item],
         dataIndex: item,
+        // dataIndex是用来组什么的呢？
         key: item
+      }
+    })
+    columns.push({
+      title: "操作",
+      key: "action",
+      render: (text, record) => {
+        const { createAt } = record
+        return  (
+          <ButtonGroup>
+            <Button size="small" type="primary" >编辑</Button>
+            <Button size="small" type="danger" >删除</Button>
+          </ButtonGroup>
+        )
       }
     })
     return columns
@@ -70,6 +86,15 @@ export default class Article extends Component {
           columns
         })
     })
+    .catch(err => {
+      // 处理错误
+    })
+    .finally(() => {
+      if(!this.updater.isMounted(this)) return
+      this.setState({
+        isLoading: false
+      })
+    })
   }
     toExcel(){
         alert("导出excel")
@@ -77,7 +102,7 @@ export default class Article extends Component {
     render() {
         return (
         <Card title="文章列表" extra={<Button onClick={this.toExcel}>导出excel</Button>} style={{ height:'100%' }}>
-            <Table  rowKey={record => record.id} columns={this.state.columns} dataSource={this.state.dataSource}
+            <Table loading={this.state.isLoading} rowKey={record => record.id} columns={this.state.columns} dataSource={this.state.dataSource}
             // 可在Table中使用pagination配置分页器
             pagination={{pageSize:6,total:100}} />
         </Card>
