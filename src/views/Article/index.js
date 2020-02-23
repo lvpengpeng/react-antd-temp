@@ -66,7 +66,7 @@ export default class Article extends Component {
     render() {
         return (
         <Card title="文章列表" extra={<Button onClick={this.toExcel}>导出excel</Button>} style={{ height:'100%' }}>
-            <Table columns={this.state.columns} dataSource={this.state.dataSource}
+            <Table  rowKey={record => record.id} columns={this.state.columns} dataSource={this.state.dataSource}
             // 可在Table中使用pagination配置分页器
             pagination={{pageSize:6,total:100}} />
         </Card>
