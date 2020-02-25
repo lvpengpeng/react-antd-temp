@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Card ,Button,Table, Divider,Tooltip, Tag} from "antd"
 import moment from 'moment'
+import XLSX from 'xlsx'
 import { getArticles } from '../../requests'
 const ButtonGroup = Button.Group
 const titleMap = {
@@ -115,9 +116,29 @@ export default class Article extends Component {
       })
     })
   }
-    toExcel(){
-        alert("导出excel")
+    toExcel = ()=>{
+    // 在实际的项目中，实际上这个功能是前端发送一个ajax请求到后端，然后后端返回一个文件下载的地址。
+    // 组合数据
+    console.log(this.state.dataSource,"this.state.dataSource");
+    
+    const data = [Object.keys(this.state.dataSource[0])] // [['id', 'title', 'author', 'amount', 'createAt']]
+    for (let i = 0; i < this.state.dataSource.length; i++) {
+      // data.push(Object.values(this.state.dataSource[i]))
+      data.push([
+        this.state.dataSource[i].id,
+        this.state.dataSource[i].title,
+        this.state.dataSource[i].author,
+        this.state.dataSource[i].amount,
+        moment(this.state.dataSource[i].createAt).format('YYYY年MM月DD日 HH:mm:ss')
+      ])
     }
+        		/* convert state to workbook */
+      const ws = XLSX.utils.aoa_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, "SheetJS");
+      /* generate XLSX file and send to client */
+      XLSX.writeFile(wb, `articles-${this.state.offset / this.state.limited + 1}-${moment().format('YYYYMMDDHHmmss')}.xlsx`)
+      }
     render() {
         return (
         <Card title="文章列表" extra={<Button onClick={this.toExcel}>导出excel</Button>} style={{ height:'100%' }}>

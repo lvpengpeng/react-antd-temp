@@ -217,3 +217,7 @@ export default App
  地址http://momentjs.cn/
  安装 npm i moment -S
  
+
+ #### 七，安装导出Excel文档插件
+ 安装 cnpm i xlsx -S
+ 使用参考 地址 https://www.npmjs.com/package/xlsx
