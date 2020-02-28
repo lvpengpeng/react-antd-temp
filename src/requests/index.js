@@ -35,3 +35,9 @@ export const getArticles = (offset = 0, limited = 10) => {
     limited
   })
 }
+
+
+// 通过id删除文章
+export const deleteArticleById = (id) => {
+  return service.post(`/api/v1/articleDelete/${id}`)
+}
