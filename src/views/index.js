@@ -25,7 +25,7 @@ const Dashboard = Loadable({
     loading: Loading
   })
   const ArticleList = Loadable({
-    loader: () => import('./Article/index'),
+    loader: () => import('./Article'),
     loading: Loading
   })
   const ArticleEdit = Loadable({

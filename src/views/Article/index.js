@@ -49,6 +49,10 @@ export default class Article extends Component {
       deleteArticleID: record.id
     })
   }
+  // 去标记页面
+  goEditPage=(record)=>{
+   this.props.history.push(`/admin/article/edit/${record.id}`)
+  }
   getcolumns(obj){
     const columnKeys = Object.keys(obj)
     const columns = columnKeys.map(item =>{
@@ -90,7 +94,7 @@ export default class Article extends Component {
         const { createAt } = record
         return  (
           <ButtonGroup>
-            <Button size="small" type="primary" >编辑</Button>
+            <Button size="small" type="primary" onClick={this.goEditPage.bind(this,record)}>编辑</Button>
             <Button size="small" type="danger" onClick={this.heandleDelect.bind(this,record)} >删除</Button>
           </ButtonGroup>
         )

@@ -13,7 +13,7 @@ class App extends Component {
           <Switch>
           {
             adminRoutes.map(route=>{
-              return  <Route key={route.pathname} path= {route.pathname} render={(routerProps)=>{
+              return  <Route key={route.pathname} exact={route.exact} path= {route.pathname} render={(routerProps)=>{
                 return <route.component {...routerProps} />
               }}/>
             })

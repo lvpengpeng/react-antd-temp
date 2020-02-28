@@ -26,11 +26,14 @@ export const adminRoutes = [{
     component: ArticleList,
     title:"文章列表",
     isNav:true,
+    exact: true,
+    roles: ['001', '002'],
     icon: 'unordered-list',
   }, {
     pathname: '/admin/article/edit/:id',
     component: ArticleEdit,
     title:"文章编辑",
+    roles: ['001', '002'],
   },{
     pathname: '/admin/settings',
     component: Settings,
