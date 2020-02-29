@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Form, Icon, Input, Button, Checkbox ,DatePicker } from 'antd';
+import {Form, Icon, Input, Button, Checkbox ,DatePicker ,Card} from 'antd';
 @Form.create()
 class Edit extends Component {
     constructor(){
@@ -50,9 +50,16 @@ class Edit extends Component {
         console.log('onOk: ', value);
       }
 
+      close(){
+          alert("点击取消")
+      }
       render(){
         const { getFieldDecorator } = this.props.form;
         return (
+            <Card    
+                title="编辑文章"
+                bordered={false}
+                extra={<Button onClick={this.close}>取消</Button>} style={{ height:'100%' }}>
             <Form 
             labelCol = {{
                 span: 4
@@ -145,6 +152,7 @@ class Edit extends Component {
                     </Button>
                 </Form.Item>
             </Form>
+         </Card>
           )
       }
          
