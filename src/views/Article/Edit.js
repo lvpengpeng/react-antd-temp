@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import {Form, Icon, Input, Button, Checkbox ,DatePicker ,Card} from 'antd';
 import E from "wangeditor"
 import  './edit.less'
+import { getArticleById  } from '../../requests'
+import moment from 'moment'
 @Form.create()
 class Edit extends Component {
     constructor(){
@@ -15,23 +17,51 @@ class Edit extends Component {
     }
 
     componentDidMount(){
+
+ 
+
         // console.log(this.refs.aaa,"this.refs.child");
         // 1.先实例
         var editor = new E(this.refs.aaa)
         // 2.添加监听事件
-        editor.customConfig.onchange = (html) =>{
+         editor.customConfig.onchange = (html) =>{
             // 监控变化，同步更新到 textarea
-            console.log(html);
             // 你不应该用 setState，可以使用 this.props.form.setFieldsValue 来动态改变表单值。
-           if(html=="<p><br></p>"){
-              html = ""
-           }
-            this.props.form.setFieldsValue({
-                text: html
-            })
+            html = html.trim()
+            console.log( html);
+            
+            if(html=="<p><br></p>"){
+                html = ""
+             }
+              this.props.form.setFieldsValue({
+                  content: html
+              })
         }
+        // document.onkeydown = function (e) { // 回车提交表单
+        //     // 兼容FF和IE和Opera
+        //         var theEvent = window.event || e;
+        //         var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+        //         alert(code)
+        //         if (code == 8||code == 46) {
+        //            alert(1)
+        //         }
+        //     }
+
         // 3.最后在创建
-        editor.create()
+        editor.create();
+        getArticleById(this.props.match.params.id)
+        .then(resp => {
+          const { id, ...data } = resp
+          data.createAt = moment(data.createAt)
+          this.props.form.setFieldsValue(data)
+          console.log(editor,"this.editor");
+          editor.txt.html(data.content)
+        })
+        .finally(() => {
+          this.setState({
+            isLoading: false
+          })
+        })
     }
 
     handleSubmit = e => {
@@ -98,7 +128,7 @@ class Edit extends Component {
                     // validateStatus={this.state.validateStatus}
                     // help={this.state.help}
                 >
-                {getFieldDecorator('username', {
+                {getFieldDecorator('title', {
                     rules: [
                     { required: true, message: '标题是必填的!' },
                     // { required: true, message: '用户名是必填的!' },
@@ -133,7 +163,7 @@ class Edit extends Component {
                 <Form.Item      
                     label="阅读量"
                 >
-                {getFieldDecorator('num', {
+                {getFieldDecorator('amount', {
                     rules: [
                     { required: true, message: '阅读量是必填的!' }
                 ],
@@ -148,7 +178,7 @@ class Edit extends Component {
                 <Form.Item      
                     label="创建时间"
                 >
-                {getFieldDecorator('time', {
+                {getFieldDecorator('createAt', {
                     rules: [
                     { required: true, message: '创建时间是必填的!' }
                 ],
@@ -161,7 +191,7 @@ class Edit extends Component {
                 <Form.Item      
                     label="内容"
                 >
-                {getFieldDecorator('text', {
+                {getFieldDecorator('content', {
                     rules: [
                     { required: true, message: '内容是必填的!' },
                 ],
