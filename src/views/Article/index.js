@@ -103,7 +103,7 @@ export default class Article extends Component {
     return columns
   }
   onPageChange = (page, pageSize) =>{
-    console.log(page, pageSize,"page, pageSize");
+    // console.log(page, pageSize,"page, pageSize");
     this.setState({
       offset: pageSize * (page - 1), 
       limited: pageSize,
@@ -112,7 +112,7 @@ export default class Article extends Component {
     })
   }
   onShowSizeChange = (current, size)=>{
-    console.log(current, size,"current, size");
+    // console.log(current, size,"current, size");
     this.setState({
       offset: 0,
       // offset: pageSize * (page - 1), 
@@ -152,11 +152,11 @@ export default class Article extends Component {
   }
   getData(){
     getArticles(this.state.offset,this.state.limited).then((res)=>{
-      console.log(res.list);
+      // console.log(res.list);
 
       const columns = this.getcolumns(res.list[0]);
       
-      console.log(columns,'columns');
+      // console.log(columns,'columns');
         this.setState({
           dataSource:res.list,
           total:res.total,
@@ -176,7 +176,7 @@ export default class Article extends Component {
     toExcel = ()=>{
     // 在实际的项目中，实际上这个功能是前端发送一个ajax请求到后端，然后后端返回一个文件下载的地址。
     // 组合数据
-    console.log(this.state.dataSource,"this.state.dataSource");
+    // console.log(this.state.dataSource,"this.state.dataSource");
     
     const data = [Object.keys(this.state.dataSource[0])] // [['id', 'title', 'author', 'amount', 'createAt']]
     for (let i = 0; i < this.state.dataSource.length; i++) {

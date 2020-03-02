@@ -221,3 +221,7 @@ export default App
  #### 七，安装导出Excel文档插件
  安装 cnpm i xlsx -S
  使用参考 地址 https://www.npmjs.com/package/xlsx
+
+  #### 八，安装富文本编辑器
+ cnpm install wangeditor -S
+  使用参考 地址 https://www.kancloud.cn/wangfupeng/wangeditor3/335769

@@ -1,15 +1,39 @@
 import React, { Component } from 'react'
 import {Form, Icon, Input, Button, Checkbox ,DatePicker ,Card} from 'antd';
+import E from "wangeditor"
+import  './edit.less'
 @Form.create()
 class Edit extends Component {
     constructor(){
         super()
+        
         this.state={
             validateStatus :"",
             help :"",
             hasFeedback:false
         }
     }
+
+    componentDidMount(){
+        // console.log(this.refs.aaa,"this.refs.child");
+        // 1.先实例
+        var editor = new E(this.refs.aaa)
+        // 2.添加监听事件
+        editor.customConfig.onchange = (html) =>{
+            // 监控变化，同步更新到 textarea
+            console.log(html);
+            // 你不应该用 setState，可以使用 this.props.form.setFieldsValue 来动态改变表单值。
+           if(html=="<p><br></p>"){
+              html = ""
+           }
+            this.props.form.setFieldsValue({
+                text: html
+            })
+        }
+        // 3.最后在创建
+        editor.create()
+    }
+
     handleSubmit = e => {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
@@ -23,7 +47,7 @@ class Edit extends Component {
       };
     //   添加自定义校验
     validatorClick=(rule, value, callback)=>{
-        console.log(rule,"1111111111", value,"2222222", callback,"----------");
+        // console.log(rule,"1111111111", value,"2222222", callback,"----------");
         if(value!=="123"){
             this.setState({
                 validateStatus :"error",
@@ -42,12 +66,12 @@ class Edit extends Component {
 
         //选择时间
      onChange = (value, dateString) => {
-        console.log('Selected Time: ', value);
-        console.log('Formatted Selected Time: ', dateString);
+        // console.log('Selected Time: ', value);
+        // console.log('Formatted Selected Time: ', dateString);
       }
       
        onOk = (value) => {
-        console.log('onOk: ', value);
+        // console.log('onOk: ', value);
       }
 
       close(){
@@ -142,7 +166,12 @@ class Edit extends Component {
                     { required: true, message: '内容是必填的!' },
                 ],
                 })(
-                    <textarea name="" id="" cols="30" rows="10"></textarea>,
+                    // <textarea name="" id="" cols="30" rows="10"></textarea>,
+                    <>
+                        <div className="lp-edit" ref="aaa"></div>
+                    </>
+                  
+                   
                 )}
                     
                 </Form.Item>
