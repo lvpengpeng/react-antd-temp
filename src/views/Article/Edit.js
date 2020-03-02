@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import {Form, Icon, Input, Button, Checkbox ,DatePicker ,Card} from 'antd';
+import {Form, Icon, Input, Button, Checkbox ,DatePicker ,Card ,message,Spin} from 'antd';
 import E from "wangeditor"
 import  './edit.less'
-import { getArticleById  } from '../../requests'
+import { getArticleById, saveArticle  } from '../../requests'
 import moment from 'moment'
 @Form.create()
 class Edit extends Component {
@@ -12,14 +12,12 @@ class Edit extends Component {
         this.state={
             validateStatus :"",
             help :"",
-            hasFeedback:false
+            hasFeedback:false,
+            isLoading:false
         }
     }
 
     componentDidMount(){
-
- 
-
         // console.log(this.refs.aaa,"this.refs.child");
         // 1.先实例
         var editor = new E(this.refs.aaa)
@@ -51,11 +49,14 @@ class Edit extends Component {
         editor.create();
         getArticleById(this.props.match.params.id)
         .then(resp => {
-          const { id, ...data } = resp
-          data.createAt = moment(data.createAt)
-          this.props.form.setFieldsValue(data)
-          console.log(editor,"this.editor");
-          editor.txt.html(data.content)
+            this.setState({
+                isLoading: true
+            })
+            const { id, ...data } = resp
+            data.createAt = moment(data.createAt)
+            this.props.form.setFieldsValue(data)
+            console.log(editor,"this.editor");
+            editor.txt.html(data.content)
         })
         .finally(() => {
           this.setState({
@@ -68,7 +69,26 @@ class Edit extends Component {
         e.preventDefault();
         this.props.form.validateFields((err, values) => {
           if (!err) {
-            console.log('Received values of form: ', values);
+            const data = Object.assign({}, values, {
+                createAt: values.createAt.valueOf()
+              })
+            
+              // 在这里可以处理更多想要处理的逻辑
+            saveArticle(this.props.match.params.id, data)
+            .then(resp => {
+                
+                this.setState({
+                    isLoading: true
+                })
+                message.success(resp.msg)
+                // 如果需要是要跳转
+                this.props.history.push('/admin/article')
+            })
+            .finally(() => {
+                this.setState({
+                isLoading: false
+                })
+            })
           }else{
               console.log(12);
               
@@ -114,103 +134,105 @@ class Edit extends Component {
                 title="编辑文章"
                 bordered={false}
                 extra={<Button onClick={this.close}>取消</Button>} style={{ height:'100%' }}>
-            <Form 
-            labelCol = {{
-                span: 4
-              }}
-              wrapperCol = {{
-                span: 16
-              }}
-            onSubmit={this.handleSubmit} className="login-form">
-                <Form.Item     
-                    label="标题" 
-                    // hasFeedback={this.state.hasFeedback}
-                    // validateStatus={this.state.validateStatus}
-                    // help={this.state.help}
-                >
-                {getFieldDecorator('title', {
-                    rules: [
-                    { required: true, message: '标题是必填的!' },
-                    // { required: true, message: '用户名是必填的!' },
-                    // {min:3,message: '最小长度是3' },
-                    // {max:6, message: '最小长度是6!' },
-                    // {validator:this.validatorClick}
-                ],
-                })(
-                    <Input
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="请填写标题"
-                    />,
-                )}
-                    
-                </Form.Item>
+            <Spin spinning={this.state.isLoading}>
+                <Form 
+                labelCol = {{
+                    span: 4
+                }}
+                wrapperCol = {{
+                    span: 16
+                }}
+                onSubmit={this.handleSubmit} className="login-form">
+                    <Form.Item     
+                        label="标题" 
+                        // hasFeedback={this.state.hasFeedback}
+                        // validateStatus={this.state.validateStatus}
+                        // help={this.state.help}
+                    >
+                    {getFieldDecorator('title', {
+                        rules: [
+                        { required: true, message: '标题是必填的!' },
+                        // { required: true, message: '用户名是必填的!' },
+                        // {min:3,message: '最小长度是3' },
+                        // {max:6, message: '最小长度是6!' },
+                        // {validator:this.validatorClick}
+                    ],
+                    })(
+                        <Input
+                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                        placeholder="请填写标题"
+                        />,
+                    )}
+                        
+                    </Form.Item>
 
-                <Form.Item      
-                    label="作者"
-                >
-                {getFieldDecorator('author', {
-                    rules: [
-                    { required: true, message: '作者是必填的!' }
-                ],
-                })(
-                    <Input
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="请填写作者"
-                    />,
-                )}
-                    
-                </Form.Item>
-                <Form.Item      
-                    label="阅读量"
-                >
-                {getFieldDecorator('amount', {
-                    rules: [
-                    { required: true, message: '阅读量是必填的!' }
-                ],
-                })(
-                    <Input
-                    prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
-                    placeholder="阅读量是"
-                    />,
-                )}
-                    
-                </Form.Item>
-                <Form.Item      
-                    label="创建时间"
-                >
-                {getFieldDecorator('createAt', {
-                    rules: [
-                    { required: true, message: '创建时间是必填的!' }
-                ],
-                })(
-                    <DatePicker showTime placeholder="Select Time" onChange={this.onChange} onOk={this.onOk} />,
-                )}
-                    
-                </Form.Item>
+                    <Form.Item      
+                        label="作者"
+                    >
+                    {getFieldDecorator('author', {
+                        rules: [
+                        { required: true, message: '作者是必填的!' }
+                    ],
+                    })(
+                        <Input
+                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                        placeholder="请填写作者"
+                        />,
+                    )}
+                        
+                    </Form.Item>
+                    <Form.Item      
+                        label="阅读量"
+                    >
+                    {getFieldDecorator('amount', {
+                        rules: [
+                        { required: true, message: '阅读量是必填的!' }
+                    ],
+                    })(
+                        <Input
+                        prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}
+                        placeholder="阅读量是"
+                        />,
+                    )}
+                        
+                    </Form.Item>
+                    <Form.Item      
+                        label="创建时间"
+                    >
+                    {getFieldDecorator('createAt', {
+                        rules: [
+                        { required: true, message: '创建时间是必填的!' }
+                    ],
+                    })(
+                        <DatePicker showTime placeholder="Select Time" onChange={this.onChange} onOk={this.onOk} />,
+                    )}
+                        
+                    </Form.Item>
 
-                <Form.Item      
-                    label="内容"
-                >
-                {getFieldDecorator('content', {
-                    rules: [
-                    { required: true, message: '内容是必填的!' },
-                ],
-                })(
-                    // <textarea name="" id="" cols="30" rows="10"></textarea>,
-                    <>
-                        <div className="lp-edit" ref="aaa"></div>
-                    </>
-                  
-                   
-                )}
+                    <Form.Item      
+                        label="内容"
+                    >
+                    {getFieldDecorator('content', {
+                        rules: [
+                        { required: true, message: '内容是必填的!' },
+                    ],
+                    })(
+                        // <textarea name="" id="" cols="30" rows="10"></textarea>,
+                        <>
+                            <div className="lp-edit" ref="aaa"></div>
+                        </>
                     
-                </Form.Item>
-                <Form.Item wrapperCol = {{  offset: 4 }}>
-                    <Button type="primary" htmlType="submit" className="login-form-button">
-                        Log in  
-                    </Button>
-                </Form.Item>
-            </Form>
+                    
+                    )}
+                        
+                    </Form.Item>
+                    <Form.Item wrapperCol = {{  offset: 4 }}>
+                        <Button type="primary" htmlType="submit" className="login-form-button">
+                            Log in  
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </Spin>
          </Card>
           )
       }
