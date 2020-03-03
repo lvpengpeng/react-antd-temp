@@ -4,7 +4,8 @@ import  {
     Dashboard ,
     Settings ,
     ArticleList, 
-    ArticleEdit
+    ArticleEdit,
+    Notifications
 } from '../views'
 
 export const mainRoutes = [{
@@ -40,4 +41,9 @@ export const adminRoutes = [{
     title:"设置",
     isNav:true,
     icon: 'setting',
+  },{
+    pathname: '/admin/notifications',
+    component: Notifications
   }]
+
+  

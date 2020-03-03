@@ -1,11 +1,26 @@
 import { adminRoutes } from '../../routes'
 import { withRouter } from 'react-router-dom'
 import React, { Component } from 'react'
-import { Layout, Menu, Breadcrumb, Icon } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon ,Dropdown ,Avatar ,Badge} from 'antd';
 import './index.less'
 const menus = adminRoutes.filter(route => route.isNav === true)
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
+const menu = (
+  <Menu>
+    <Menu.Item>
+      <Badge dot>
+          通知中心
+      </Badge>
+    </Menu.Item>
+    <Menu.Item>
+        个人设置
+    </Menu.Item>
+    <Menu.Item>
+        退出
+    </Menu.Item>
+  </Menu>
+);
 
 
 // 添加布局组件
@@ -16,10 +31,33 @@ class Frame extends Component {
         
         this.props.history.push(key)
       }
+    renderDropdown (){
+    return (
+        <Menu onClick={this.onDropdownMenuClick}>
+          <Menu.Item
+           key="/admin/notifications">
+            <Badge dot>
+                通知中心
+            </Badge>
+          </Menu.Item>
+          <Menu.Item
+           key="/admin/profile">
+              个人设置
+          </Menu.Item>
+          <Menu.Item
+           key="/logout">
+              退出
+          </Menu.Item>
+        </Menu>
+      )   
+    }
+    onDropdownMenuClick(){
+      alert(1)
+    }
     render() {
         return (
             <Layout style={{minHeight:'100%'}}>
-            <Header className="header" style={{backgroundColor: "#ccc"}}>
+            <Header className="header header-wrap" style={{backgroundColor: "#ccc"}}>
               <div className="logo logo-img"/>
               {/* <Menu
                 theme="dark"
@@ -31,6 +69,19 @@ class Frame extends Component {
                 <Menu.Item key="2">nav 2</Menu.Item>
                 <Menu.Item key="3">nav 3</Menu.Item>
               </Menu> */}
+              <div>
+
+              
+            <Dropdown overlay={this.renderDropdown()} >
+                <div className="ant-dropdown-link" style={{display: 'flex', alignItems: 'center'}} onClick={e => e.preventDefault()}>
+                  <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />  
+                   <span>欢迎 lee</span>
+                   <Badge count={33} offset={[14, -10]}>
+                      <Icon type="down" />
+                  </Badge>
+                </div>
+            </Dropdown>
+            </div>
             </Header>
             <Layout>
               <Sider width={200} style={{ background: '#fff' }}>

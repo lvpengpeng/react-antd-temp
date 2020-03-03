@@ -32,11 +32,16 @@ const Dashboard = Loadable({
     loader: () => import('./Article/Edit'),
     loading: Loading
   })
+  const Notifications = Loadable({
+    loader: () => import('./Notifications'),
+    loading: Loading
+  })
 export {
     Dashboard ,
     Login ,
     NotFound, 
     Settings ,
     ArticleList, 
-    ArticleEdit
+    ArticleEdit,
+    Notifications
 }
