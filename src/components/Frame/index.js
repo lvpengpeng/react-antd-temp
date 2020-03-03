@@ -51,8 +51,9 @@ class Frame extends Component {
         </Menu>
       )   
     }
-    onDropdownMenuClick(){
-      alert(1)
+    // onDropdownMenuClick 可以拿到Menu.Item里面的属性
+    onDropdownMenuClick = ({ key }) => {
+      this.props.history.push(key)
     }
     render() {
         return (
