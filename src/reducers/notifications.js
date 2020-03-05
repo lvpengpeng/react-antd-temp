@@ -27,13 +27,23 @@ const initState = {
           ...state,
           list: newList
         }
-        case actionTypes.MARK_ALL_NOTIFICATIONS_AS_READ:
+      case actionTypes.MARK_ALL_NOTIFICATIONS_AS_READ:
+        return {
+          ...state,
+          list: state.list.map(item => {
+            item.hasRead = true
+            return item
+          })
+        }
+        case actionTypes.START_NOTIFICATION_POST:
           return {
             ...state,
-            list: state.list.map(item => {
-              item.hasRead = true
-              return item
-            })
+            isLoading: true
+          }
+        case actionTypes.FINISH_NOTIFICATION_POST:
+          return {
+            ...state,
+            isLoading: false
           }
         default:
           return state
