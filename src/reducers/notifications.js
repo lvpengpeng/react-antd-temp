@@ -45,6 +45,11 @@ const initState = {
             ...state,
             isLoading: false
           }
+        case actionTypes.RECIVED_NOTIFICATIONS:
+          return {
+            ...state,
+            list: action.payload.list
+          }
         default:
           return state
     } 

@@ -1,5 +1,5 @@
 import actionTypes from './actionTypes'
-
+import { getNotifications } from '../requests'
 
 export const markNotificationAsReadById = (id) => {
     return dispatch => {
@@ -39,5 +39,21 @@ export const markNotificationAsReadById = (id) => {
   const finishPost = () => {
     return {
       type: actionTypes.FINISH_NOTIFICATION_POST
+    }
+  }
+
+  export const getNotificationList = () => {
+    return dispatch => {
+      dispatch(startPost())
+      getNotifications()
+        .then(resp => {
+          dispatch({
+            type: actionTypes.RECIVED_NOTIFICATIONS,
+            payload: {
+              list: resp.list
+            }
+          })
+          dispatch(finishPost())
+        })
     }
   }

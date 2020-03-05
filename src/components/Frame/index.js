@@ -4,6 +4,10 @@ import React, { Component } from 'react'
 import { Layout, Menu, Breadcrumb, Icon ,Dropdown ,Avatar ,Badge} from 'antd';
 import './index.less'
 import { connect } from 'react-redux'
+import { getNotificationList } from '../../actions/notifications'
+
+
+
 const menus = adminRoutes.filter(route => route.isNav === true)
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -27,10 +31,13 @@ const mapState = (state)=>{
   notificationsCount: state.notifications.list.filter(item => item.hasRead === false).length
   }
 }
-@connect(mapState)
+@connect(mapState, { getNotificationList})
 // 添加布局组件
 @withRouter
 class Frame extends Component {
+  componentDidMount () {
+    this.props.getNotificationList()
+  }
     onMenuClick = ({key}) => {
         // console.log(this.props);
         
