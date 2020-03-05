@@ -6,24 +6,29 @@ import App from './App'
 import './index.less'
 import { LocaleProvider } from 'antd';
 import zhCN from 'antd/lib/locale-provider/zh_CN';
+
+import { Provider } from 'react-redux'
+import store from './store'
 render(
-    <LocaleProvider locale={zhCN}>
-        <Router>
-            <Switch>
-                <Route path="/admin" render={(routerProps)=>{
-                    {/* 需要登录才能访问admin ,所以用render*/}
-                    return <App {...routerProps}/>
-                }} />
-                
-                {
-                    mainRoutes.map(route => {
-                    return <Route key={route.pathname} path={route.pathname} component={route.component} />
-                    })
-                }
-                <Redirect to="/admin" from="/" exact />
-                <Redirect to="/404" />
-            </Switch>
-        </Router>
-    </LocaleProvider>,
+    <Provider store={store}>
+        <LocaleProvider locale={zhCN}>
+            <Router>
+                <Switch>
+                    <Route path="/admin" render={(routerProps)=>{
+                        {/* 需要登录才能访问admin ,所以用render*/}
+                        return <App {...routerProps}/>
+                    }} />
+                    
+                    {
+                        mainRoutes.map(route => {
+                        return <Route key={route.pathname} path={route.pathname} component={route.component} />
+                        })
+                    }
+                    <Redirect to="/admin" from="/" exact />
+                    <Redirect to="/404" />
+                </Switch>
+            </Router>
+        </LocaleProvider>
+    </Provider>,
     document.querySelector('#root')
 )

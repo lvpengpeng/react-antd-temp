@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom'
 import React, { Component } from 'react'
 import { Layout, Menu, Breadcrumb, Icon ,Dropdown ,Avatar ,Badge} from 'antd';
 import './index.less'
+import { connect } from 'react-redux'
 const menus = adminRoutes.filter(route => route.isNav === true)
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
@@ -21,8 +22,12 @@ const menu = (
     </Menu.Item>
   </Menu>
 );
-
-
+const mapState = (state)=>{
+  return {
+  notificationsCount: state.notifications.list.filter(item => item.hasRead === false).length
+  }
+}
+@connect(mapState)
 // 添加布局组件
 @withRouter
 class Frame extends Component {
@@ -36,7 +41,7 @@ class Frame extends Component {
         <Menu onClick={this.onDropdownMenuClick}>
           <Menu.Item
            key="/admin/notifications">
-            <Badge dot>
+            <Badge dot={Boolean(this.props.notificationsCount)}>
                 通知中心
             </Badge>
           </Menu.Item>
@@ -77,7 +82,7 @@ class Frame extends Component {
                 <div className="ant-dropdown-link" style={{display: 'flex', alignItems: 'center'}} onClick={e => e.preventDefault()}>
                   <Avatar src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />  
                    <span>欢迎 lee</span>
-                   <Badge count={33} offset={[14, -10]}>
+                   <Badge count={this.props.notificationsCount} offset={[14, -10]}>
                       <Icon type="down" />
                   </Badge>
                 </div>

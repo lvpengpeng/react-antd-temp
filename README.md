@@ -225,3 +225,6 @@ export default App
   #### 八，安装富文本编辑器
  cnpm install wangeditor -S
   使用参考 地址 https://www.kancloud.cn/wangfupeng/wangeditor3/335769
+
+ #### 九，使用redux
+   安装cnpm i redux react-redux redux-thunk -S
