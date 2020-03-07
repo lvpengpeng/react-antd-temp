@@ -6,9 +6,27 @@ import { render } from 'react-dom';
 import { adminRoutes } from './routes'
 import { Route, Switch, Redirect } from 'react-router-dom'
 import { Frame } from './components'
+import { connect } from 'react-redux'
+
+
+
+
+const mapState = (state)=>{
+  const {
+    isLoading
+  } = state.users
+  return {
+    isLoading
+  }
+}
+
+@connect(mapState)
 class App extends Component {
   render() {
+    console.log(this.props.isLoading,'isLoading');
+    
     return (
+      this.props.isLoading?
       <Frame>
           <Switch>
           {
@@ -23,6 +41,8 @@ class App extends Component {
             <Redirect to="/404" />
           </Switch>
       </Frame>
+      :
+      <Redirect to="/login"></Redirect>
     )
   }
 }
